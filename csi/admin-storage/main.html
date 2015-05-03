@@ -1,1 +1,113 @@
-storage<div data-md='storage'>
+<div tabindex="-1" class="modal fade"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" data-dismiss="modal" aria-hidden="true" class="close">x</button><h4>Информация о товаре</h4></div><div class="modal-body"><ul class="nav nav-tabs"><li class="active"><a href="#goods-properties" data-toggle="tab">Свойства</a></li><li><a href="#goods-preview" data-toggle="tab">Изображение</a></li></ul><div class="tab-content"><div id="goods-properties" class="tab-pane fade active in"><form class="form-horizontal"><fieldset><div class="form-group"><label class="control-label col-lg-4">ID</label><col-lg-8><div class="input-group"><input type="text" class="form-control goods-editor-id"/></div></col-lg-8></div><div class="form-group"><label class="control-label col-lg-4">Наименование</label><col-lg-8><div class="input-group"><input type="text" class="form-control goods-editor-name"/></div></col-lg-8></div><div class="form-group"><label class="control-label col-lg-4">Тип</label><col-lg-8><select class="form-control goods-editor-type"><option value="1">1</option><option value="2">2</option><option value="3">3</option></select></col-lg-8></div><div class="form-group"><label class="control-label col-lg-4">Цена</label><col-lg-8><div class="input-group"><input type="text" class="form-control goods-editor-price"/></div></col-lg-8></div><div class="form-group"><label class="control-label col-lg-4">Остаток</label><col-lg-8><div class="input-group"><input type="text" class="form-control goods-editor-amount"/></div></col-lg-8></div></fieldset></form></div><div id="goods-preview" class="tab-pane fade"><p>Сначала введите id товара.</p></div></div><div class="alert hidden alert-dismissable alert-danger"><button type="button" data-dismiss="alert" class="close">×</button><strong>Oh snap!</strong></div><div class="alert hidden alert-dismissable alert-success"><button type="button" data-dismiss="alert" class="close">×</button><strong>Данные успешно сохранены</strong></div></div><hr/><div class="modal-footer"><button class="btn btn-primary btn-create">Создать</button><button class="btn btn-primary btn-save">  Сохранить</button><button class="btn btn-primary btn-delete">Удалить</button><button data-dismiss="modal" class="btn btn-primary">Отмена</button></div></div></div></div><table class="hidden"><thead><th data-field="id">ID</th><th data-field="name">Наименование</th><th data-field="type">Тип</th><th data-field="price">Цена</th><th data-field="amount">Остаток</th><th data-field="edit" data-formatter="tableOfGoodsToolsFormatter" data-events="tableOfGoodsToolsEvents">Править</th></thead><tbody><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tbody></table><script>(function() {
+  var csi, id;
+
+  id = 'admin-storage';
+
+  csi = require('csi');
+
+  if (csi[id]) {
+    return;
+  }
+
+  csi[id] = function(sect) {
+    var $idField, $prev, $rowDlg, $sect, $usrTbl;
+    $sect = $(sect);
+    $usrTbl = $sect.find('table').removeClass('hidden');
+    $rowDlg = $sect.find('.modal');
+    window.tableOfGoodsToolsFormatter = function(value, row, index) {
+      return '<div class="row-tools"><i class="mdi-content-create"></i></div>';
+    };
+    $prev = $sect.find('#goods-preview');
+    $idField = $sect.find('.row-editor-id');
+    $sect.find('[href=#goods-prewiew]').click(function() {
+      var $file;
+      $prev.empty();
+      return $file = $('<input type="file">').attr('name', $idField.val()).appendTo($prev).fileinput({
+        uploadUrl: '/admin/upload/goods'
+      });
+    });
+    window.tableOfGoodsToolsEvents = {
+      'click .mdi-content-create': function(e, value, row, index) {
+        var descr, events, prefix, view;
+        prefix = '.goods-editor-';
+        descr = {
+          id: {
+            notEmpty: true,
+            filter: 'alphanum',
+            event: 'focusout'
+          },
+          name: {
+            notEmpty: true,
+            filter: 'any',
+            event: 'focusout'
+          },
+          type: {
+            notEmpty: true,
+            filter: 'alphanum',
+            event: 'change'
+          },
+          price: {
+            notEmpty: true,
+            filter: 'price',
+            event: 'focusout'
+          },
+          amount: {
+            notEmpty: true,
+            filter: 'integer',
+            event: 'focusout'
+          }
+        };
+        events = {};
+        _.each(descr, function(val, key) {
+          return events[val.event + ' ' + prefix + key] = function() {
+            return this.setFromField(key);
+          };
+        });
+        events['click .btn-save'] = function() {
+          return alert(JSON.stringify(this.model.attributes));
+        };
+        view = require('validator')({
+          id: 12345,
+          name: 'HZ',
+          type: 3
+        }, descr, $rowDlg, prefix, events);
+        return $rowDlg.modal();
+
+        /*
+        $success = $rowDlg.find '.alert-success'
+        $danger  = $rowDlg.find '.alert-danger'
+        $errMsg  = $danger.find 'strong'
+        RowView  = Backbone.View.extend({
+            el: $rowDlg[0]
+            setFromField: (key) ->
+                this.model.set key, this.$el.find('.goods-editor-' + key).val()
+            events:
+                'focusout .goods-editor-id': () ->
+                    this.setFromField('id')
+                'focusout .goods-editor-name': () ->
+                    this.setFromField('name')
+                'focusout .goods-editor-price': () ->
+                    this.setFromField('price')
+                'focusout .goods-editor-amount': () ->
+                    this.setFromField('amount')
+                'change .goods-editor-type': () ->
+                    this.setFromField('type')
+                'click .btn-save': () ->
+                    $alert = $success
+                    if !this.model.isValid()
+                        $errMsg.text this.model.validationError
+                        $alert = $danger
+                    $alert.removeClass 'hidden'
+                    setTimeout (() -> $alert.addClass 'hidden'), 3000
+        })
+        
+        rowView = new RowView
+            model: model
+         */
+      }
+    };
+    $usrTbl.bootstrapTable();
+  };
+
+}).call(this);
+</script>

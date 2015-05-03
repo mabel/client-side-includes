@@ -3,7 +3,9 @@
 define(['css', 'cms'], function(requireCss, setSlices){
     $nav = $('nav')
     var id = $nav.data('csi')
+    var csiFunctions = {}
     loadSection(id, requireCss, setSlices)
+    return csiFunctions
 })
 
 function loadSection(id, requireCss, setSlices){

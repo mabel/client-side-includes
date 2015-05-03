@@ -1,1 +1,50 @@
-editor<div data-md='editor'>
+<div class="container"><div class="row"><div class="col-lg-6"><div class="h3">Список материалов</div><select size="20" class="form-control"></select></div><div class="col-lg-6"><div class="h3">Редактирование</div><form class="form-horizontal"><fieldset><div class="form-group"><label class="control-label col-lg-2">Имя файла</label><col-lg-10><div class="input-group"><input type="text" placeholder="a-z, 0-9, _" class="form-control"/></div></col-lg-10></div></fieldset></form><p>Если имени файла нет в списке - будет создан новый.</p><br/><textarea rows="10"></textarea></div></div></div><script>(function() {
+  var csi;
+
+  csi = require('csi');
+
+  if (csi['admin-editor']) {
+    return;
+  }
+
+  csi['admin-editor'] = function(sect) {
+    var $file, $files, $prevBtn, $saveBtn, $sect, $ta;
+    $sect = $(sect);
+    $ta = $sect.find('textarea');
+    $file = $sect.find('input');
+    $files = $sect.find('select');
+    $ta.markdown({
+      savable: true,
+      language: 'ru',
+      onSave: function(e) {
+        var content, dat, file;
+        file = $file.val().trim();
+        if (!/^[a-z0-9_]{3,}$/.test(file)) {
+          alert('Укажите имя файла.');
+          return;
+        }
+        content = e.getContent().trim();
+        if (!content) {
+          alert('Нечего сохранять. Напишите что-нибудь.');
+          return;
+        }
+        if (!/^#/.test(content)) {
+          alert('В начале текста должен быть заголовок. Используйте знак #.');
+          return;
+        }
+        dat = {
+          content: content,
+          file: file
+        };
+        return $.post('/edit/save/texts', dat, function(repl) {
+          return alert(repl);
+        });
+      }
+    });
+    $prevBtn = $sect.find('.btn-toolbar .btn-group:last button').text('').append('<span class="glyphicon glyphicon-search"></span> Предпросмотр');
+    $saveBtn = $sect.find('.md-footer button');
+    $saveBtn.removeClass('btn-success').addClass('btn-primary').text('').append('<span class="glyphicon glyphicon-cloud-upload"></span> Сохранить');
+  };
+
+}).call(this);
+</script>

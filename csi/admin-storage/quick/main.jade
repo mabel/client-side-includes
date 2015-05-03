@@ -1,0 +1,78 @@
+.modal(class=['fade'], tabindex='-1')
+    .modal-dialog
+        .modal-content
+            .modal-header
+                button.close(type='button', data-dismiss='modal', aria-hidden='true') x
+                h4 Информация о товаре
+            .modal-body
+                ul(class=['nav', 'nav-tabs'])
+                    li.active
+                        a(href='#goods-properties', data-toggle='tab') Свойства
+                    li
+                        a(href='#goods-preview', data-toggle='tab') Изображение
+                .tab-content
+                    #goods-properties(class=['tab-pane', 'fade', 'active', 'in'])
+                        form.form-horizontal
+                            fieldset
+                                .form-group
+                                    label.control-label(class='col-lg-4') ID
+                                    col-lg-8
+                                        .input-group
+                                            input.form-control(type="text", class='goods-editor-id')
+                                .form-group
+                                    label.control-label(class='col-lg-4') Наименование
+                                    col-lg-8
+                                        .input-group
+                                            input.form-control(type="text", class='goods-editor-name')
+                                .form-group
+                                    label.control-label(class='col-lg-4') Тип
+                                    col-lg-8
+                                        select.form-control(class='goods-editor-type')
+                                            option(value=1) 1
+                                            option(value=2) 2
+                                            option(value=3) 3
+                                .form-group
+                                    label.control-label(class='col-lg-4') Цена
+                                    col-lg-8
+                                        .input-group
+                                            input.form-control(type="text", class='goods-editor-price')
+                                .form-group
+                                    label.control-label(class='col-lg-4') Остаток
+                                    col-lg-8
+                                        .input-group
+                                            input.form-control(type="text", class='goods-editor-amount')
+                    #goods-preview(class=['tab-pane', 'fade'])
+                        p Сначала введите id товара.
+                .alert(class=['hidden', 'alert-dismissable', 'alert-danger'])
+                    button(type="button", class="close", data-dismiss="alert") ×
+                    strong Oh snap!
+                .alert(class=['hidden', 'alert-dismissable', 'alert-success'])
+                    button(type="button", class="close", data-dismiss="alert") ×
+                    strong Данные успешно сохранены
+            hr
+            .modal-footer
+                button(class=['btn', 'btn-primary', 'btn-create']) Создать
+                button(class=['btn', 'btn-primary', 'btn-save'])   Сохранить
+                button(class=['btn', 'btn-primary', 'btn-delete']) Удалить
+                button(class=['btn', 'btn-primary'], data-dismiss='modal') Отмена
+table.hidden
+    thead
+        th(data-field='id') ID
+        th(data-field='name') Наименование
+        th(data-field='type') Тип
+        th(data-field='price') Цена
+        th(data-field='amount') Остаток
+        th(
+            data-field='edit'
+            data-formatter='tableOfGoodsToolsFormatter'
+            data-events='tableOfGoodsToolsEvents'
+        ) Править
+    tbody
+        td -
+        td -
+        td -
+        td -
+        td -
+        td -
+script
+    :coffee
