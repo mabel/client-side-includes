@@ -19,12 +19,14 @@ requirejs.config({
         csi:        'lib/csi',
         cms:        'lib/cms',
         css:        'lib/css',
+        i18n:       'lib/i18n',
         validator:  'lib/validator',
     },
 
     shim: {
         backbone:  {deps: ['underscore']},
         validator: {deps: ['backbone']},
+        i18n:      {deps: ['jquery']},
         bootstrap: {deps: ['jquery']},
         material:  {deps: ['bootstrap']},
         ripples:   {deps: ['bootstrap']},
@@ -50,7 +52,7 @@ define('css_list', ['css'], function(requireCss){
         'css/bootstrap-table.min',
         'css/fileinput.min',
     ].forEach(function(el){requireCss(el)})
-    require(['csi'])
+    require(['i18n'])
 })
 
 require(['spin', 'css_list'])

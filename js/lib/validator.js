@@ -78,7 +78,7 @@ define(function(){
                 _.each(descr, function(val, key){
                     if(typeof val === 'string') val = {filter: val}
                     isValid &= validator(attrs[key], val.filter, val.notEmpty)
-                    if(!err && !isValid) err = 'valdation_error_' + key
+                    if(!err && !isValid) err = 'validation_error' + prefix.replace(/[\.\#\-]/g, '_') + key
                 })
                 if(err) return err
             }
@@ -96,6 +96,25 @@ define(function(){
                 setFromField: function(key){
                     var val = this.$el.find(prefix + key).val()
                     this.model.set(key, val)
+                },
+                clear: function(){
+                    this.$el.find('input, select').each(function(){
+                        $input = $(this)
+                        var inputType = $(this).attr('type')
+                        if($(this).is('select')) inputType = 'select'    
+                        switch(inputType){
+                            case 'checkbox':
+                                $input.prop('checked', false)
+                                break
+                            case 'radio':
+                                $input.filter('[value=' + val + ']').prop('checked', false)
+                                break
+                            case 'select':
+                                $input = $input.find('option').filter(':first').prop('selected', true)
+                            default:
+                                $input.val('')
+                        }
+                    })
                 },
                 render: function(){
                     var attrs = this.model.attributes

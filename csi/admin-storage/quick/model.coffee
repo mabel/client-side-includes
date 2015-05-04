@@ -1,54 +1,69 @@
+            prefix = '.goods-editor-'
+            descr =
+                id:     {notEmpty: true,  filter: 'alphanum', event: 'focusout'}
+                name:   {notEmpty: true,  filter: 'any',      event: 'focusout'}
+                descr:  {notEmpty: false, filter: 'any',      event: 'focusout'}
+                price:  {notEmpty: true,  filter: 'price',    event: 'focusout'}
+                amount: {notEmpty: true,  filter: 'integer',  event: 'focusout'}
+                type:   {notEmpty: true,  filter: '1|2|3',    event: 'change'}
+                index:  {notEmpty: true,  filter: 'int'}
+
+            events = {}
+            _.each descr, (val, key) ->
+                if !val.event
+                    return
+                events[val.event + ' ' + prefix + key] = () ->
+                    this.setFromField key
+
+            events['click .btn-save'] = () ->
+                if !this.model.isValid()
+                    showResult this.model.validationError
+                    return
+                attrs = this.model.attributes
+                ajaxSuccess = (dat) ->
+                    if dat
+                        dat = 'server_failure_' + dat
+                        showResult dat
+                        return
+                    showResult()
+                    if attrs.isNew
+                        delete attrs.isNew
+                        $strTbl.bootstrapTable 'append', attrs
+                        return
+                    $strTbl.bootstrapTable 'updateRow', {index: attrs.index, row: attrs}
+                ajaxFailure = (dat) ->
+                    showResult 'server_error'
+                $.post '/admin/goods/set', attrs, ajaxSuccess, ajaxFailure
+
+            $alertSuccess = $rowDlg.find '.alert-success'
+            $alertDanger  = $rowDlg.find '.alert-danger'
+            $errMessage   = $alertDanger.find 'strong'
+
+            showResult = (err) ->
+                $alert = $alertSuccess
+                if err
+                    $alert = $alertDanger
+                    $errMessage.attr 'data-i18n-text', err
+                    $alert.i18n()
+                $alert.removeClass 'hidden'
+                setTimeout (() -> $alert.addClass 'hidden'), 3000
+
             window.tableOfGoodsToolsEvents =
+                'click .mdi-action-delete': (e, value, row, index) ->
+                    if confirm 'Действительно удалить?'
+                        $strTbl.bootstrapTable 'remove', {field: 'id', values: [row.id]}
+                        $.get '/admin/del/str/' + row.id
                 'click .mdi-content-create': (e, value, row, index) ->
-                    prefix = '.goods-editor-'
-                    descr =
-                        id:     {notEmpty: true, filter: 'alphanum', event: 'focusout'}
-                        name:   {notEmpty: true, filter: 'any', event: 'focusout'}
-                        type:   {notEmpty: true, filter: 'alphanum', event: 'change'}
-                        price:  {notEmpty: true, filter: 'price', event: 'focusout'}
-                        amount: {notEmpty: true, filter: 'integer', event: 'focusout'}
-                    events = {}
-                    _.each descr, (val, key) ->
-                        events[val.event + ' ' + prefix + key] = () ->
-                            this.setFromField key
-
-                    events['click .btn-save'] = () ->
-                            alert JSON.stringify(this.model.attributes)
-
-                    view = require('validator')({id: 12345, name: 'HZ', type: 3}, descr, $rowDlg, prefix, events)
+                    getView = require 'validator'
+                    view = getView row, descr, $rowDlg, prefix, events
+                    view.model.set 'index', index
+                    $rowDlg.find '.goods-editor-id'
+                        .prop 'disabled', row.id !== '!!!'
                     $rowDlg.modal()
 
-                    ###
-                    $success = $rowDlg.find '.alert-success'
-                    $danger  = $rowDlg.find '.alert-danger'
-                    $errMsg  = $danger.find 'strong'
-                    RowView  = Backbone.View.extend({
-                        el: $rowDlg[0]
-                        setFromField: (key) ->
-                            this.model.set key, this.$el.find('.goods-editor-' + key).val()
-                        events:
-                            'focusout .goods-editor-id': () ->
-                                this.setFromField('id')
-                            'focusout .goods-editor-name': () ->
-                                this.setFromField('name')
-                            'focusout .goods-editor-price': () ->
-                                this.setFromField('price')
-                            'focusout .goods-editor-amount': () ->
-                                this.setFromField('amount')
-                            'change .goods-editor-type': () ->
-                                this.setFromField('type')
-                            'click .btn-save': () ->
-                                $alert = $success
-                                if !this.model.isValid()
-                                    $errMsg.text this.model.validationError
-                                    $alert = $danger
-                                $alert.removeClass 'hidden'
-                                setTimeout (() -> $alert.addClass 'hidden'), 3000
-                    })
-
-                    rowView = new RowView
-                        model: model
-                    ###
-            $usrTbl.bootstrapTable()
+            $strTbl.bootstrapTable()
+            $strTbl.find '[data-toggle=popover]'
+                .popover
+                    placement: 'bottom'
             return
 
