@@ -69,13 +69,15 @@
                     strong Данные успешно сохранены
             hr
             .modal-footer
-                // button(class=['btn', 'btn-primary', 'btn-create']) Создать
                 button(class=['btn', 'btn-primary', 'btn-save'])   Сохранить
-                // button(class=['btn', 'btn-primary', 'btn-delete']) Удалить
-                button(class=['btn', 'btn-primary'], data-dismiss='modal') Отмена
+                button(class=['btn', 'btn-primary'], data-dismiss='modal') Закрыть
 
 button(class=['btn', 'btn-primary', 'btn-create']) Создать
-table.hidden
+table.hidden(
+    data-url='/admin/goods/get'
+    data-sort-name='id'
+    data-sort-order='asc'
+)
     thead
         th(
             data-field='id'
@@ -110,14 +112,5 @@ table.hidden
             data-events='tableOfGoodsToolsEvents'
             data-width='100'
         ) Править
-    tbody
-        td 123
-        td # У попа была собака.
-        td 1
-        td Test
-        td 2
-        td 123.45
-        td 678
-        td 1
 script
     :coffee

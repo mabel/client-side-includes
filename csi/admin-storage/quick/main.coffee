@@ -32,7 +32,7 @@
             window.tableOfGoodsTypesFormatter = (value, row, index)  ->
                 goodsTypes[value]
             $prev = $sect.find '#goods-preview'
-            $idField = $sect.find '.row-editor-id'
+            $idField = $sect.find '.goods-editor-id'
             $sect.find '[href=#goods-preview]'
                 .click () ->
                     $prev.empty()
@@ -48,7 +48,4 @@
                     $.get url, () ->
                         $dz.css
                             'background-image': 'url("' + url + '")'
-            $sect.find '.btn-create'
-                .click ()->
-                    $strTbl.bootstrapTable 'append', {id: '!!!', name:'Новый товар', type: 0, price: 0, amount: 0}
 
