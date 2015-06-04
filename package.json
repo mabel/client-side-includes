@@ -1,0 +1,43 @@
+{
+  "name": "app-name",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "amqplib": "^0.3.2",
+    "backbone": "^1.1.2",
+    "body-parser": "^1.10.0",
+    "bootable": "0.2.x",
+    "bootable-environment": "0.2.x",
+    "connect-powered-by": "0.1.x",
+    "ejs": "0.8.x",
+    "es6-promise": "^2.1.1",
+    "express": "3.x.x",
+    "locomotive": "0.4.x",
+    "method-override": "^2.3.0",
+    "multiparty": "^4.1.1",
+    "mysql": "^2.6.2",
+    "node-uuid": "^1.4.3",
+    "passport": "^0.2.1",
+    "passport-local": "^1.0.0",
+    "redis": "^0.12.1",
+    "shortid": "^2.2.2",
+    "underscore": "^1.7.0",
+    "websocket": "^1.0.19",
+    "when": "^3.7.3",
+    "winston": "^1.0.0"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "devDependencies": {
+    "coffee-script": "^1.9.2",
+    "gulp": "^3.8.11",
+    "gulp-coffee": "^2.3.1",
+    "gulp-concat": "^2.5.2",
+    "gulp-jade": "^1.0.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-replace": "^0.5.3",
+    "gulp-stylus": "^2.0.1",
+    "gutil": "^1.6.4"
+  }
+}
