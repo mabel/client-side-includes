@@ -1,0 +1,29 @@
+.navbar(class='navbar-default')
+    .navbar-header
+        button(
+            type="button" 
+            class="navbar-toggle" 
+            data-toggle="collapse" 
+            data-target=".navbar-responsive-collapse"
+        )
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+        a.navbar-brand(href="#") #{menuBrand}
+
+    .navbar-collapse(class=['collapse', 'navbar-responsive-collapse'])
+        ul(class=['nav', 'navbar-nav'])
+            block menuLeft
+                li.active: a(href="#csi-about" tabindex=201) #{menuAbout}
+                li: a(href="#csi-contacts"     tabindex=201) #{menuContacts}
+
+        block menuRight
+            ul(class=['nav', 'navbar-nav', 'navbar-right'])
+                li
+                    a(href="#" name='submit' tabindex=103) #{menuLogin}
+                    //    i(class="mdi-action-exit-to-app")
+            form(class="navbar-form navbar-right")
+                input(class="form-control" placeholder="#{placeholderPassword}" type="password", tabindex=102)
+            form(class="navbar-form navbar-right")
+                input(class="form-control" placeholder="#{placeholderLogin}"    type="text",     tabindex=101)
+

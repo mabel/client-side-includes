@@ -1,2 +1,0 @@
-validation_error_goods_editor_id = Неправильный id товара.
-

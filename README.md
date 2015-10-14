@@ -1,2 +1,2 @@
-# client-side-inclusives
-Client side inclusions
+# client-side-includes
+Client side includes

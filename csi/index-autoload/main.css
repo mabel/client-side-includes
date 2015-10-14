@@ -1,0 +1,7 @@
+#autoload h1 {
+  color: #f00;
+}
+#autoload textarea {
+  width: 640px;
+  height: 480px;
+}

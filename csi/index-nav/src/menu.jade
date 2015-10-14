@@ -1,0 +1,10 @@
+extend ../../_lib/menu.jade
+block menuLeft
+    li.active: a(href="#csi-info" tabindex=201) Info
+    li: a(href="#csi-cached"      tabindex=202) Cached
+    li: a(href="#csi-autoload"    tabindex=202) Autoload
+
+block menuRight
+    ul(class=['nav', 'navbar-nav', 'navbar-right'])
+        li
+            | &nbsp;
